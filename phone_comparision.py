@@ -668,6 +668,43 @@ def main():
         with col2:
             st.plotly_chart(fig, use_container_width=True)
     
+    # --- New Feature: Compare Two Devices by Name ---
+    st.markdown("## 🤝 Compare Any Two Devices")
+    st.info("Enter the names of any two devices from the database to compare them side by side.")
+    colA, colB = st.columns(2)
+    with colA:
+        device1 = st.text_input("Device 1 Name", "iPhone 15 Pro Max")
+    with colB:
+        device2 = st.text_input("Device 2 Name", "Samsung Galaxy S24 Ultra")
+    compare_btn = st.button("Compare Devices")
+    if compare_btn:
+        df1 = df[df['name'].str.lower() == device1.strip().lower()]
+        df2 = df[df['name'].str.lower() == device2.strip().lower()]
+        if df1.empty or df2.empty:
+            st.error("One or both device names not found. Please check spelling or try another device.")
+        else:
+            compare_df = pd.concat([df1, df2])
+            st.markdown("### 📊 Device Comparison Table")
+            st.dataframe(compare_df[['name','price','camera','battery','performance','display','storage','ram','screen_size','os']], use_container_width=True, hide_index=True)
+            # Visual comparison
+            st.markdown("### 📈 Visual Comparison")
+            fig = go.Figure()
+            for _, row in compare_df.iterrows():
+                fig.add_trace(go.Bar(
+                    x=['Camera','Battery','Performance','Display'],
+                    y=[row['camera'], row['battery'], row['performance'], row['display']],
+                    name=row['name']
+                ))
+            fig.update_layout(
+                barmode='group',
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='white'),
+                title_font=dict(color='#00f5ff', size=16),
+                title="Specs Comparison"
+            )
+            st.plotly_chart(fig, use_container_width=True)
+    
     # Add filter summary
     add_filter_summary(budget, primary_use, brand_pref, min_camera, min_battery)
     # Add comparison section
@@ -1140,6 +1177,43 @@ def main():
             </div>
             """, unsafe_allow_html=True)
         with col2:
+            st.plotly_chart(fig, use_container_width=True)
+    
+    # --- New Feature: Compare Two Devices by Name ---
+    st.markdown("## 🤝 Compare Any Two Devices")
+    st.info("Enter the names of any two devices from the database to compare them side by side.")
+    colA, colB = st.columns(2)
+    with colA:
+        device1 = st.text_input("Device 1 Name", "iPhone 15 Pro Max")
+    with colB:
+        device2 = st.text_input("Device 2 Name", "Samsung Galaxy S24 Ultra")
+    compare_btn = st.button("Compare Devices")
+    if compare_btn:
+        df1 = df[df['name'].str.lower() == device1.strip().lower()]
+        df2 = df[df['name'].str.lower() == device2.strip().lower()]
+        if df1.empty or df2.empty:
+            st.error("One or both device names not found. Please check spelling or try another device.")
+        else:
+            compare_df = pd.concat([df1, df2])
+            st.markdown("### 📊 Device Comparison Table")
+            st.dataframe(compare_df[['name','price','camera','battery','performance','display','storage','ram','screen_size','os']], use_container_width=True, hide_index=True)
+            # Visual comparison
+            st.markdown("### 📈 Visual Comparison")
+            fig = go.Figure()
+            for _, row in compare_df.iterrows():
+                fig.add_trace(go.Bar(
+                    x=['Camera','Battery','Performance','Display'],
+                    y=[row['camera'], row['battery'], row['performance'], row['display']],
+                    name=row['name']
+                ))
+            fig.update_layout(
+                barmode='group',
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='white'),
+                title_font=dict(color='#00f5ff', size=16),
+                title="Specs Comparison"
+            )
             st.plotly_chart(fig, use_container_width=True)
     
     # Add filter summary
